@@ -1,22 +1,28 @@
 open VDS.Utils
-open VDS.StubbornLink
+open VDS.PerfectLink
 
-let receiver_process msg =
-  Printf.printf "[Receiver] Received message %d from %d: %s\n"
-    msg.msgID msg.source msg.content;
-  flush stdout
+(* Create sender and receiver perfect links *)
+let sender_link = PerfectLink.create 1 ~max_retries:3 ()
+let receiver_link = PerfectLink.create 2 ~max_retries:3 ()
+
+(* Receiver function: delivers and processes the message once *)
+let receiver_fn msg =
+  PerfectLink.deliver receiver_link msg (fun delivered_msg ->
+    Printf.printf "[Main] Delivered message %d: %s\n"
+      delivered_msg.msgID delivered_msg.content;
+    flush stdout
+  )
+
+(* Create the DATA message to send *)
+let msg = {
+  msgID = 42;
+  source = 1;
+  destination = 2;
+  content = "Hello from PerfectLink";
+}
 
 let () =
-  let link = StubbornLink.create 1 ~max_retries:3 () in
-
-  let msg = {
-    msgID = 42;
-    source = 1;
-    destination = 2;
-    content = "Hello from stubborn sender!";
-  } in
-
-  Printf.printf "--- StubbornLink Test ---\n";
+  Printf.printf "--- Starting Perfect Link Test ---\n";
   flush stdout;
 
-  StubbornLink.send link msg receiver_process
+  PerfectLink.send sender_link msg receiver_fn

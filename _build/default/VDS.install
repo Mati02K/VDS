@@ -6,3 +6,7 @@ lib: [
 bin: [
   "_build/install/default/bin/VDS"
 ]
+doc: [
+  "_build/install/default/doc/VDS/LICENSE"
+  "_build/install/default/doc/VDS/README.md"
+]

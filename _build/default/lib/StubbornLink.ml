@@ -16,14 +16,24 @@ module StubbornLink = struct
     max_retries;
   }
 
-  let rec send (link : state) (msg : message) (receiver : message -> unit) : unit =
+  (* recursion Approach *)
+  (* let rec send (link : state) (msg : message) (receiver : message -> unit) : unit =
     if link.retries < link.max_retries then begin
       Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
       flush stdout;
       FairLossLink.send_once link.fair_loss msg receiver;
       link.retries <- link.retries + 1;
       send link msg receiver
-    end
+    end *)
+
+  (* Iteration Approach *)
+  let send (link : state) (msg : message) (receiver : message -> unit) : unit =
+    while link.retries < link.max_retries do
+      Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
+      flush stdout;
+      FairLossLink.send_once link.fair_loss msg receiver;
+      link.retries <- link.retries + 1
+    done
 
   let deliver = FairLossLink.deliver
 end

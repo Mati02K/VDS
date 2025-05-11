@@ -13,4 +13,4 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /home/mati0/.opam/5.1.1/bin/ocamlc.opt -config > /tmp/dune_945e38_output
+$ /home/mati0/.opam/5.1.1/bin/ocamlc.opt -config > /tmp/dune_12e328_output

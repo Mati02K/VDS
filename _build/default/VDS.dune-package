@@ -1,4 +1,4 @@
 (lang dune 3.18)
 (name VDS)
-(sections (lib .) (bin ../../bin))
-(files (lib (META dune-package opam)) (bin (VDS)))
+(sections (lib .) (bin ../../bin) (doc ../../doc/VDS))
+(files (lib (META dune-package opam)) (bin (VDS)) (doc (LICENSE README.md)))
