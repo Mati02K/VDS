@@ -1,0 +1,4 @@
+(executable
+ (public_name VDS)
+ (name main)
+ (libraries VDS))

@@ -1,0 +1,8 @@
+; (test
+;  (name FairLossTest)
+;  (libraries VDS)
+;  (preprocess (pps ppx_inline_test)))
+
+(executable
+ (name FairLossTest)
+ (libraries VDS))
