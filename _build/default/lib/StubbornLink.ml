@@ -29,10 +29,16 @@ module StubbornLink = struct
   (* Iteration Approach *)
   let send (link : state) (msg : message) (receiver : message -> unit) : unit =
     while link.retries < link.max_retries do
+      let timestamp = Unix.gettimeofday () in
+      Printf.printf "[Stubborn] Retry #%d for message %d at %.4f\n"
+        link.retries msg.msgID timestamp;
+      flush stdout;
+
       Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
       flush stdout;
-      FairLossLink.send_once link.fair_loss msg receiver;
-      link.retries <- link.retries + 1
+      FairLossLink.send link.fair_loss msg receiver;
+      link.retries <- link.retries + 1;
+      Unix.sleepf 0.01
     done
 
   let deliver = FairLossLink.deliver

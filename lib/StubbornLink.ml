@@ -1,3 +1,10 @@
+(* Properties 
+SL1. Stubborn delivery.
+• If a correct process pi sends a message m to a correct process pj, then pj delivers m, an infinite number of times.
+SL2. No creation:
+• No message is delivered unless it was sent.
+*)
+
 open Utils
 open FairLossLink
 
@@ -16,23 +23,19 @@ module StubbornLink = struct
     max_retries;
   }
 
-  (* recursion Approach *)
-  (* let rec send (link : state) (msg : message) (receiver : message -> unit) : unit =
-    if link.retries < link.max_retries then begin
-      Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
-      flush stdout;
-      FairLossLink.send_once link.fair_loss msg receiver;
-      link.retries <- link.retries + 1;
-      send link msg receiver
-    end *)
-
-  (* Iteration Approach *)
   let send (link : state) (msg : message) (receiver : message -> unit) : unit =
     while link.retries < link.max_retries do
-      Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
+      let timestamp = Unix.gettimeofday () in
+      Printf.printf "[TIME] Retry #%d for message %d at %.4f\n"
+        link.retries msg.msgID timestamp;
       flush stdout;
-      FairLossLink.send_once link.fair_loss msg receiver;
-      link.retries <- link.retries + 1
+
+      Printf.printf "[STUBBORNLINK] Retry #%d for message %d\n" link.retries msg.msgID;
+      flush stdout;
+      FairLossLink.send link.fair_loss msg receiver;
+      link.retries <- link.retries + 1;
+      (* Adding this so that deliver has some breathing space to deliver *)
+      Unix.sleepf 0.01
     done
 
   let deliver = FairLossLink.deliver

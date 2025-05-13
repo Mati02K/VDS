@@ -1,2 +1,5 @@
 (library
- (name VDS))
+ (name VDS)
+ (libraries unix)
+ (flags (:standard -w -69)))
+ 

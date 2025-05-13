@@ -16,7 +16,7 @@ module FairLossLink = struct
   }
 
   (* True fair-loss: sends only once *)
-  let send_once (link : state) (msg : message) (receiver : message -> unit) : unit =
+  let send (link : state) (msg : message) (receiver : message -> unit) : unit =
     link.sent <- msg :: link.sent;
     Printf.printf "[FairLoss] Process %d sent message %d to %d\n"
       link.id msg.msgID msg.destination;

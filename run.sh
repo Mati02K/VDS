@@ -16,9 +16,9 @@ run_main() {
   dune exec bin/main.exe
 }
 
-run_fairlosstest() {
-  echo "Running FairLossTest..."
-  dune exec test/FairLossTest.exe
+run_perfectLinkTest() {
+  echo "Running PerfectLink..."
+  dune exec test/PerfectLinkTest.exe
 }
 
 # Dispatch based on argument
@@ -26,12 +26,12 @@ case "$TARGET" in
   main)
     run_main
     ;;
-  fairlosstest)
-    run_fairlosstest
+  test_perfectLink)
+    run_perfectLinkTest
     ;;
   all)
     run_main
-    run_fairlosstest
+    run_perfectLinkTest
     ;;
   *)
     echo "❌ Unknown target: $TARGET"
