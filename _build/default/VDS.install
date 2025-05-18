@@ -5,6 +5,7 @@ lib: [
 ]
 bin: [
   "_build/install/default/bin/VDS"
+  "_build/install/default/bin/sender"
 ]
 doc: [
   "_build/install/default/doc/VDS/LICENSE"

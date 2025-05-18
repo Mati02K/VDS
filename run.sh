@@ -12,13 +12,13 @@ TARGET=$1
 
 # Define what to run
 run_main() {
-  echo "Running main..."
+  echo "Running Main (Receiver)..."
   dune exec bin/main.exe
 }
 
-run_perfectLinkTest() {
-  echo "Running PerfectLink..."
-  dune exec test/PerfectLinkTest.exe
+run_sender() {
+  echo "Running Sender..."
+  dune exec bin/sender.exe
 }
 
 # Dispatch based on argument
@@ -26,16 +26,16 @@ case "$TARGET" in
   main)
     run_main
     ;;
-  test_perfectLink)
-    run_perfectLinkTest
+  send)
+    run_sender
     ;;
   all)
     run_main
-    run_perfectLinkTest
+    run_sender
     ;;
   *)
-    echo "❌ Unknown target: $TARGET"
-    echo "Usage: ./run.sh [main | fairlosstest | all]"
+    echo "Unknown target: $TARGET"
+    echo "Usage: ./run.sh [main | send | all]"
     exit 1
     ;;
 esac

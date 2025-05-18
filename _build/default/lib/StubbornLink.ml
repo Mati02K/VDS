@@ -1,3 +1,10 @@
+(* Properties 
+SL1. Stubborn delivery.
+• If a correct process pi sends a message m to a correct process pj, then pj delivers m, an infinite number of times.
+SL2. No creation:
+• No message is delivered unless it was sent.
+*)
+
 open Utils
 open FairLossLink
 
@@ -9,37 +16,29 @@ module StubbornLink = struct
     max_retries : int;
   }
 
-  let create id ?(max_retries = max_int) () = {
+  let create id ?(max_retries = max_int) port = {
     id;
-    fair_loss = FairLossLink.create id ();
+    fair_loss = FairLossLink.create id port;
     retries = 0;
     max_retries;
   }
 
-  (* recursion Approach *)
-  (* let rec send (link : state) (msg : message) (receiver : message -> unit) : unit =
-    if link.retries < link.max_retries then begin
-      Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
-      flush stdout;
-      FairLossLink.send_once link.fair_loss msg receiver;
-      link.retries <- link.retries + 1;
-      send link msg receiver
-    end *)
-
-  (* Iteration Approach *)
-  let send (link : state) (msg : message) (receiver : message -> unit) : unit =
+  let send (link : state) (msg : message) (dest_ip : string) (dest_port : int) : unit =
     while link.retries < link.max_retries do
       let timestamp = Unix.gettimeofday () in
-      Printf.printf "[Stubborn] Retry #%d for message %d at %.4f\n"
+      Printf.printf "[TIME] Retry #%d for message %d at %.4f\n"
         link.retries msg.msgID timestamp;
-      flush stdout;
+      flush Stdlib.stdout;
 
-      Printf.printf "[Stubborn] Retry #%d for message %d\n" link.retries msg.msgID;
-      flush stdout;
-      FairLossLink.send link.fair_loss msg receiver;
+      Printf.printf "[STUBBORNLINK] Retry #%d for message %d\n" link.retries msg.msgID;
+      flush Stdlib.stdout;
+
+      FairLossLink.send link.fair_loss msg dest_ip dest_port;
       link.retries <- link.retries + 1;
+
       Unix.sleepf 0.01
     done
 
-  let deliver = FairLossLink.deliver
+  let receive (link : state) : message option =
+    FairLossLink.receive link.fair_loss
 end

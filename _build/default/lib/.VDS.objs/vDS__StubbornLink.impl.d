@@ -1,1 +1,1 @@
-lib/StubbornLink.ml: FairLossLink Printf Unix Utils
+lib/StubbornLink.ml: FairLossLink Printf Stdlib Unix Utils

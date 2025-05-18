@@ -16,27 +16,29 @@ module StubbornLink = struct
     max_retries : int;
   }
 
-  let create id ?(max_retries = max_int) () = {
+  let create id ?(max_retries = max_int) port = {
     id;
-    fair_loss = FairLossLink.create id ();
+    fair_loss = FairLossLink.create id port;
     retries = 0;
     max_retries;
   }
 
-  let send (link : state) (msg : message) (receiver : message -> unit) : unit =
+  let send (link : state) (msg : message) (dest_ip : string) (dest_port : int) : unit =
     while link.retries < link.max_retries do
       let timestamp = Unix.gettimeofday () in
       Printf.printf "[TIME] Retry #%d for message %d at %.4f\n"
         link.retries msg.msgID timestamp;
-      flush stdout;
+      flush Stdlib.stdout;
 
       Printf.printf "[STUBBORNLINK] Retry #%d for message %d\n" link.retries msg.msgID;
-      flush stdout;
-      FairLossLink.send link.fair_loss msg receiver;
+      flush Stdlib.stdout;
+
+      FairLossLink.send link.fair_loss msg dest_ip dest_port;
       link.retries <- link.retries + 1;
-      (* Adding this so that deliver has some breathing space to deliver *)
+
       Unix.sleepf 0.01
     done
 
-  let deliver = FairLossLink.deliver
+  let receive (link : state) : message option =
+    FairLossLink.receive link.fair_loss
 end

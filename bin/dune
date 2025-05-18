@@ -1,5 +1,10 @@
 (executable
  (public_name VDS)
  (name main)
- (libraries VDS threads)
- (flags (:standard -w -69)))
+ (libraries VDS threads))
+
+
+(executable
+ (name sender)
+ (public_name sender)
+ (libraries VDS threads))
